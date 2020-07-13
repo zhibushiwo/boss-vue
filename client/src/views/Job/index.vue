@@ -11,7 +11,11 @@
     <div class="content">
       <JobFilter />
       <div class="list">
-        <JobItem v-for="(item, index) in jobItemList" :key="index" v-bind="{...item}" />
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+          <van-list v-model="loading" :finished="finished" finished-text="别滑了，已经没啦" @load="onLoad">
+            <JobItem v-for="(item, index) in jobItemList" :key="index" v-bind="{...item}" />
+          </van-list>
+        </van-pull-refresh>
       </div>
     </div>
     <LayoutFooter />
@@ -27,7 +31,11 @@ export default {
   props: {},
   data() {
     return {
-      jobList: []
+      jobList: [],
+      loading: false,
+      finished: false,
+      isLoading: false,
+      page: 0
     };
   },
   computed: {
@@ -43,19 +51,33 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    this.getData();
+  async mounted() {
+    //this.jobList = await this.getData();
   },
   watch: {},
   methods: {
     async getData() {
       try {
-        let data = await getJobs();
-        console.log(data);
-        this.jobList = data.data;
-      } catch (error) {
-        console.log(error);
+        let data = await getJobs({
+          page: this.page
+        });
+        return data.data;
+      } catch (error) {}
+    },
+    async onLoad() {
+      let data = await this.getData();
+      if (data.length == 0) {
+        this.finished = true;
       }
+      this.jobList.push(...data);
+      this.page++;
+      this.loading = false;
+    },
+    async onRefresh() {
+      this.page = 0;
+      let data = await this.getData();
+      this.jobList = data;
+      this.isLoading = false;
     }
   },
   components: {
@@ -70,10 +92,12 @@ export default {
 <style scoped lang="scss">
 .content {
   background: $grey;
-  height: 100%;
   padding-top: $layout-header-height;
-  .content {
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 50px - #{$layout-header-height});
+  .list {
+    flex: 1;
     overflow: auto;
   }
 }

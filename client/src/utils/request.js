@@ -8,6 +8,7 @@ instance.interceptors.request.use(reqHandle, errHandle)
 instance.interceptors.response.use(resHandle, errHandle)
 
 function reqHandle(config) {
+    console.log(config)
     return config;
 }
 

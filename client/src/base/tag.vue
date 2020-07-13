@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "tag",
-  render(h, ctx) {
+  render(h) {
     return h(
       "span",
       {

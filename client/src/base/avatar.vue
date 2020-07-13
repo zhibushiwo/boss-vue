@@ -1,7 +1,5 @@
 <template functional>
-  <div>
-    <van-image round width="10rem" height="10rem" :src="context.props.img" />
-  </div>
+  <van-image :class="data.staticClass" v-bind="data.attrs" v-on="listeners" round :src="props.img" />
 </template>
 
 <script>

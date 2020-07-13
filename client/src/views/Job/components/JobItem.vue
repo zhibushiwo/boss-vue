@@ -12,7 +12,9 @@
     </div>
     <div class="info">
       <div class="public">
-        <span>{{publis.name}}</span>·
+        <base-avatar class="avatar" :img="avatar" width="30" />
+        <span>{{publis.name}}</span>
+        <span class="point">·</span>
         <span>{{publis.job}}</span>
       </div>
       <div class="location">{{location}}</div>
@@ -21,6 +23,7 @@
 </template>
 
 <script>
+import avatar from "@/assets/avatar.jpg";
 export default {
   props: {
     name: {
@@ -43,7 +46,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      avatar
+    };
   },
   computed: {
     sTags() {
@@ -66,18 +71,17 @@ export default {
   background: #fff;
   margin-bottom: 7px;
   padding: 12px;
+  color: #333;
   .title {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
     .name {
-      font-weight: 600;
-      font-size: 22px;
+      font-size: 20px;
     }
     .money {
       color: $theme-color;
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 18px;
     }
   }
   .tags {
@@ -94,6 +98,16 @@ export default {
   .info {
     display: flex;
     justify-content: space-between;
+    .public {
+      @include flex-center();
+      .avatar {
+        margin-right: 6px;
+      }
+      .point {
+        font-weight: 600;
+        margin:0 2px;
+      }
+    }
     .location {
       color: #888;
     }

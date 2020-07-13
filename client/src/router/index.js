@@ -33,13 +33,21 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/Profile')
+  },
+  {
+    path: '/*',
+    name: '404',
+    component: () => import('../views/404')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // return 期望滚动到哪个的位置
+  }
 })
 
 export default router

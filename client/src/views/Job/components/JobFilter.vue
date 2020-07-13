@@ -1,5 +1,5 @@
 <template>
-  <div class="filter">
+  <div class="filter van-hairline--bottom">
     <div class="left">
       <span
         v-for="(item, index) in type"
@@ -19,10 +19,12 @@
         <span>关键词</span>
       </base-tag>
     </div>
+    <LocationFilter ref="locationFilter" />
   </div>
 </template>
 
 <script>
+import LocationFilter from "./LocationFilter";
 export default {
   name: "JobFilter",
   props: {},
@@ -41,16 +43,16 @@ export default {
       this.cur = type;
     },
     selectCity() {
-      console.log("selectCity");
+       this.$refs.locationFilter.open();
     },
     selectFilter() {
-      console.log("selectFilter");
     },
     selectKeyword() {
-      console.log("selectKeyword");
     }
   },
-  components: {}
+  components: {
+    LocationFilter
+  }
 };
 </script>
 
@@ -61,7 +63,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid $grey;
   .left {
     display: flex;
     justify-content: space-around;

@@ -1,3 +1,3 @@
 import request from '@/utils/request';
 
-export const getJobs = () => request.get("/getjobs")
+export const getJobs = (params) => request.get("/getjobs", { params })

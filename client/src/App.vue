@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view class="page" />
+    <keep-alive>
+        <router-view class="page" />
+    </keep-alive>
   </div>
 </template>
 <style lang="scss">
