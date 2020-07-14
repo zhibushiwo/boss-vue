@@ -1,52 +1,29 @@
 <template>
   <Search :show="show" @close="show=false" :showFoot="false">
     <template #title>
-      <h4>宁波</h4>
+      <h4>选择城市</h4>
     </template>
     <div class="content">
+      <div class="locationCity" v-if="locationCity">
+        <h4 class="title">定位城市</h4>
+        <base-tag class="tag" @click="handleSelect(locationCity)">{{locationCity.name}}</base-tag>
+      </div>
+      <div class="hotCities">
+        <h4 class="title">热门城市</h4>
+        <base-tag
+          class="tag"
+          @click="handleSelect(item)"
+          v-for="(item, index) in hotCityList"
+          :key="index"
+        >{{item.name}}</base-tag>
+      </div>
       <van-index-bar>
-        <van-index-anchor index="A" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="B" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="C" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-index-anchor index="D" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="E" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="F" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-index-anchor index="G" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="H" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="I" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
+        <template v-for="(item, index) in cityList">
+          <van-index-anchor :index="item[0]" :key="index" />
+          <template v-for="(city) in item[1]">
+            <base-tag class="tag" @click="handleSelect(city)" :key="city.code">{{city.name}}</base-tag>
+          </template>
+        </template>
       </van-index-bar>
     </div>
   </Search>
@@ -55,12 +32,16 @@
 <script>
 import { getCities } from "@/api";
 import Search from "@/components/Search";
+import { mapMutations } from "vuex";
 export default {
   name: "CityFilter",
   props: {},
   data() {
     return {
-      show: false
+      show: false,
+      locationCity: null,
+      hotCityList: [],
+      cityList: []
     };
   },
   computed: {},
@@ -74,9 +55,30 @@ export default {
       this.show = true;
     },
     async getData() {
-      let data = await getCities();
-      console.log(data);
-    }
+      let res = await getCities();
+      let { locationCity, hotCityList, cityList } = res.data;
+      this.locationCity = locationCity;
+      this.hotCityList = hotCityList;
+      let totalCity = Object.create(null);
+      cityList.map(({ subLevelModelList }) => {
+        subLevelModelList.map(item => {
+          if (item.firstChar) {
+            let letter = item.firstChar.toUpperCase();
+            if (!totalCity[letter]) {
+              totalCity[letter] = new Array();
+            }
+            totalCity[letter].push(item);
+          }
+        });
+      });
+      this.cityList = Object.freeze(Object.entries(totalCity).sort());
+    },
+    handleSelect(val) {
+      this.SetCurCity(val);
+      this.$emit("select");
+      this.show = false;
+    },
+    ...mapMutations(["SetCurCity"])
   },
   components: {
     Search
@@ -86,26 +88,15 @@ export default {
 
 <style scoped lang="scss">
 .content {
-  display: flex;
-  height: 100%;
-  ul {
-    padding: 0 9px;
-    li {
-      margin: 12px 0 24px;
-      &.select {
-        color: $theme-color;
-      }
-    }
+  padding: 7px;
+  .tag {
+    width: 22vw;
+    margin-bottom: 10px;
+    text-align: center;
   }
-  .type {
-    flex: 3;
-    background: $grey;
-  }
-  .location {
-    flex: 4;
-  }
-  .detail {
-    flex: 4;
+  .title {
+    font-size: 16px;
+    margin: 8px;
   }
 }
 </style>

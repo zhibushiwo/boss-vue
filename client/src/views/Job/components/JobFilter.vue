@@ -10,7 +10,7 @@
     </div>
     <div class="right">
       <base-tag class="filter-tag" @click="selectCity">
-        <span>宁波</span>
+        <span>{{CurCity}}</span>
       </base-tag>
       <base-tag class="filter-tag" @click="selectFilter">
         <span>筛选</span>
@@ -20,11 +20,14 @@
       </base-tag>
     </div>
     <LocationFilter ref="locationFilter" />
+    <JobFilterDetail ref="jobFilterDetail" />
   </div>
 </template>
 
 <script>
 import LocationFilter from "./LocationFilter";
+import JobFilterDetail from "./JobFilterDetail";
+import { mapGetters } from "vuex";
 export default {
   name: "JobFilter",
   props: {},
@@ -34,7 +37,9 @@ export default {
       cur: "推荐"
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["CurCity"])
+  },
   created() {},
   mounted() {},
   watch: {},
@@ -43,15 +48,16 @@ export default {
       this.cur = type;
     },
     selectCity() {
-       this.$refs.locationFilter.open();
+      this.$refs.locationFilter.open();
     },
     selectFilter() {
+      this.$refs.jobFilterDetail.open();
     },
-    selectKeyword() {
-    }
+    selectKeyword() {}
   },
   components: {
-    LocationFilter
+    LocationFilter,
+    JobFilterDetail
   }
 };
 </script>

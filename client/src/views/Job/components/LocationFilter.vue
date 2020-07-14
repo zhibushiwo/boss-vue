@@ -4,7 +4,7 @@
       <span @click="$refs.cityfilter.open()">切换城市</span>
     </template>
     <template #title>
-      <h4>宁波</h4>
+      <h4>{{CurCity}}</h4>
     </template>
     <div class="content">
       <div class="type">
@@ -32,13 +32,14 @@
         </ul>
       </div>
     </div>
-    <CityFilter ref="cityfilter" />
+    <CityFilter ref="cityfilter" @select="show=false" />
   </Search>
 </template>
 
 <script>
 import Search from "@/components/Search";
 import CityFilter from "@/components/CityFilter";
+import { mapGetters } from "vuex";
 export default {
   props: {},
   data() {
@@ -91,7 +92,9 @@ export default {
       show: false
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["CurCity"])
+  },
   created() {},
   mounted() {
     this.selected = [this.types[0].id, this.locations[0].id, []];
