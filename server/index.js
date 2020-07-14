@@ -15,6 +15,15 @@ app.get("/api/getjobs", (req, res) => {
 
 })
 
+app.get("/api/getcity", (req, res) => {
+    let data = require("./data/city.json").data
+    res.json({
+        code: 0,
+        message: "success",
+        data: data
+    })
+})
+
 app.listen(3333, () => {
     console.log("start")
 })

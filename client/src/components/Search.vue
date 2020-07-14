@@ -10,7 +10,7 @@
           <slot name="button"></slot>
         </div>
       </div>
-      <div class="content">
+      <div class="search-content">
         <slot></slot>
       </div>
       <div class="search-footer van-hairline--top" v-if="showFoot">
@@ -67,8 +67,9 @@ export default {
       font-size: 18px;
     }
   }
-  .content {
+  .search-content {
     flex: 1;
+    overflow: auto;
   }
   .search-footer {
     height: 60px;

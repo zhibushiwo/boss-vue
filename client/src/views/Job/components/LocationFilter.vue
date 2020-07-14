@@ -1,7 +1,7 @@
 <template>
   <Search :show="show" @close="show=false">
     <template #button>
-      <span>切换城市</span>
+      <span @click="$refs.cityfilter.open()">切换城市</span>
     </template>
     <template #title>
       <h4>宁波</h4>
@@ -9,26 +9,46 @@
     <div class="content">
       <div class="type">
         <ul>
-          <li v-for="(item, index) in types" :key="index">{{item}}</li>
+          <li
+            v-for="(item, index) in types"
+            :key="index"
+            :class="{select:item.id==selected[0]}"
+          >{{item.name}}</li>
         </ul>
       </div>
       <div class="location van-hairline--right">
         <ul>
-          <li v-for="(item, index) in locations" :key="index">{{item.name}}</li>
+          <li
+            v-for="(item, index) in locations"
+            :key="index"
+            :class="{select:item.id==selected[1]}"
+            @click="selected.splice(1,1,item.id)"
+          >{{item.name}}</li>
         </ul>
       </div>
-      <div class="detail">全宁波</div>
+      <div class="detail">
+        <ul>
+          <li class="select">全宁波</li>
+        </ul>
+      </div>
     </div>
+    <CityFilter ref="cityfilter" />
   </Search>
 </template>
 
 <script>
 import Search from "@/components/Search";
+import CityFilter from "@/components/CityFilter";
 export default {
   props: {},
   data() {
     return {
-      types: ["商圈"],
+      types: [
+        {
+          name: "商圈",
+          id: 1
+        }
+      ],
       locations: [
         {
           name: "宁波",
@@ -73,7 +93,9 @@ export default {
   },
   computed: {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.selected = [this.types[0].id, this.locations[0].id, []];
+  },
   watch: {},
   methods: {
     open() {
@@ -81,7 +103,8 @@ export default {
     }
   },
   components: {
-    Search
+    Search,
+    CityFilter
   }
 };
 </script>
@@ -89,15 +112,25 @@ export default {
 <style scoped lang="scss">
 .content {
   display: flex;
+  height: 100%;
+  ul {
+    padding: 0 9px;
+    li {
+      margin: 12px 0 24px;
+      &.select {
+        color: $theme-color;
+      }
+    }
+  }
   .type {
-    flex: 0 0 3;
+    flex: 3;
     background: $grey;
   }
   .location {
-    flex: 0 0 4;
+    flex: 4;
   }
   .detail {
-    flex: 0 0 4;
+    flex: 4;
   }
 }
 </style>
