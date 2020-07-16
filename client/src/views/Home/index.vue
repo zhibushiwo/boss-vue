@@ -3,7 +3,7 @@
     <van-notice-bar closeable :scrollable="false" left-icon="cross" text="下载APP，及时回复BOSS信息，早点给你福报" />
     <div class="banner">
       <div class="title">
-        <div class="main">找工作和NMB谈</div>
+        <div class="main">找工作和BOSS谈</div>
         <div class="sub">BOSS直聘</div>
       </div>
       <van-search

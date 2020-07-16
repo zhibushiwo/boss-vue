@@ -9,24 +9,27 @@
       >{{item}}</span>
     </div>
     <div class="right">
-      <base-tag class="filter-tag" @click="selectCity">
+      <base-tag class="filter-tag" @click="showCity">
         <span>{{CurCity}}</span>
       </base-tag>
-      <base-tag class="filter-tag" @click="selectFilter">
+      <base-tag class="filter-tag" @click="showFilter">
         <span>筛选</span>
       </base-tag>
-      <base-tag class="filter-tag" @click="selectKeyword">
+      <base-tag class="filter-tag" @click="showKeyword">
         <span>关键词</span>
       </base-tag>
     </div>
     <LocationFilter ref="locationFilter" />
-    <JobFilterDetail ref="jobFilterDetail" />
+    <JobFilterDetail ref="jobFilterDetail" @select="selectFilter" />
+    <KeywordFilter ref="keywordFilter" @select="selectFilter" />
   </div>
 </template>
 
 <script>
 import LocationFilter from "./LocationFilter";
 import JobFilterDetail from "./JobFilterDetail";
+import KeywordFilter from "./KeywordFilter";
+
 import { mapGetters } from "vuex";
 export default {
   name: "JobFilter",
@@ -47,17 +50,23 @@ export default {
     handleTypeChange(type) {
       this.cur = type;
     },
-    selectCity() {
+    showCity() {
       this.$refs.locationFilter.open();
     },
-    selectFilter() {
+    showFilter() {
       this.$refs.jobFilterDetail.open();
     },
-    selectKeyword() {}
+    selectFilter(filer) {
+      console.log(filter);
+    },
+    showKeyword() {
+      this.$refs.keywordFilter.open();
+    }
   },
   components: {
     LocationFilter,
-    JobFilterDetail
+    JobFilterDetail,
+    KeywordFilter
   }
 };
 </script>

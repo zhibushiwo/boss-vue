@@ -1,5 +1,5 @@
 <template>
-  <Search :show="show" @close="show=false">
+  <Search :show="show" @close="show=false" @clear="clear" @confirm="confirm">
     <template #button>
       <span @click="$refs.cityfilter.open()">切换城市</span>
     </template>
@@ -103,6 +103,10 @@ export default {
   methods: {
     open() {
       this.show = true;
+    },
+    clear() {},
+    confirm() {
+      this.show = false;
     }
   },
   components: {

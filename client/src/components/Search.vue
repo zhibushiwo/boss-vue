@@ -15,10 +15,10 @@
       </div>
       <div class="search-footer van-hairline--top" v-if="showFoot">
         <div class="left">
-          <van-button block type="default">清除</van-button>
+          <van-button block type="default" @click="$emit('clear')">清除</van-button>
         </div>
         <div class="right">
-          <van-button block color="#37c2bb">确定</van-button>
+          <van-button block color="#37c2bb" @click="$emit('confirm')">确定</van-button>
         </div>
       </div>
     </div>
