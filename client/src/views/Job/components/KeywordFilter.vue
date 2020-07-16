@@ -1,5 +1,5 @@
 <template>
-  <Search :show="show" @close="show=false" @clear="clearAll" @confrim="confirm">
+  <Search :show="show" @close="show=false" @clear="clearAll" @confirm="confirm">
     <template #title>
       <h4>
         关键词
@@ -15,27 +15,48 @@
         <div>
           <van-search v-model="search" placeholder="搜索关键词" />
           <div v-for="(item, index) in keywords" :key="index">
-            <h4 class="title">{{item.type}}</h4>
+            <div class="header">
+              <h4>{{item.type}}</h4>
+              <div>
+                <span class="count" v-show="item.select.length>0">{{item.select.length}}</span>
+                <span v-if="item.words.length>9">
+                  <base-icon
+                    class="icon"
+                    type="down"
+                    size="14"
+                    v-if="!item.showAll"
+                    @click="toggleShow(index)"
+                  ></base-icon>
+                  <base-icon class="icon" type="up" size="14" @click="toggleShow(index)" v-else></base-icon>
+                </span>
+              </div>
+            </div>
             <div class="tagWrap">
               <base-tag
                 class="tags"
                 :class="{active:item.select.includes(val)  }"
                 @click="handleSelect(index,val)"
-                v-for="(val, idx) in item.words"
+                v-for="(val, idx) in renderShow(item.words,item.showAll)"
                 :key="idx"
               >{{val}}</base-tag>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="selected">已选 | xxx</div>
+      <div class="footer" v-show="keywordLength>0">
+        已选
+        <base-vline />
+        <div class="selWrap">
+          <span class="selected" v-for="(item, index) in selectKeyWords" :key="index">{{item}}</span>
+        </div>
+      </div>
     </div>
   </Search>
 </template>
 
 <script>
 import Search from "@/components/Search";
+const MAX_KEYWORDS_NUM = 5;
 export default {
   props: {},
   data() {
@@ -58,7 +79,8 @@ export default {
             "YUI",
             "Polymer"
           ],
-          select: []
+          select: [],
+          showAll: false
         },
         {
           type: "开发语言",
@@ -82,7 +104,8 @@ export default {
             "C333",
             "D444"
           ],
-          select: []
+          select: [],
+          showAll: false
         },
         {
           type: "前端项目",
@@ -94,12 +117,14 @@ export default {
             "网页游戏",
             "特效制作"
           ],
-          select: []
+          select: [],
+          showAll: false
         },
         {
           type: "前端标准/规范",
           words: ["CSS3", "HTML5", "JSON", "HTTP1.1", "XML"],
-          select: []
+          select: [],
+          showAll: false
         },
         {
           type: "推荐关键词",
@@ -145,7 +170,8 @@ export default {
             "TypeScript",
             "Redux"
           ],
-          select: []
+          select: [],
+          showAll: false
         }
       ]
     };
@@ -153,6 +179,9 @@ export default {
   computed: {
     keywordLength() {
       return this.keywords.reduce((acc, cur) => acc + cur.select.length, 0);
+    },
+    selectKeyWords() {
+      return this.keywords.reduce((acc, cur) => acc.concat(...cur.select), []);
     }
   },
   created() {},
@@ -165,19 +194,23 @@ export default {
     clearFilter(idx) {
       this.keywords[idx].select = [];
     },
+    toggleShow(idx) {
+      this.keywords[idx].showAll = !this.keywords[idx].showAll;
+    },
+    renderShow(list, showAll) {
+      if (!showAll) {
+        return list.slice(0, 9);
+      }
+      return list;
+    },
     clearAll() {
       this.keywords.map(item => {
         item.select = [];
       });
     },
     confirm() {
-      let filter = this.keywords
-        .map(({ type, select }) => ({
-          type,
-          select
-        }))
-        .filter(({ select }) => select.length > 0);
-      this.$emit("select", filter);
+      this.show = false;
+      this.$emit("select", this.selectKeyWords);
     },
     handleSelect(typeIndex, val) {
       let cur = Object.assign({}, this.keywords[typeIndex]);
@@ -185,10 +218,17 @@ export default {
       if (idx > -1) {
         cur.select.splice(idx, 1);
       } else {
+        if (this.keywordLength == MAX_KEYWORDS_NUM) {
+          this.$toast({
+            message: "5个人头5份赏金",
+            position: "bottom"
+          });
+          return false;
+        }
         if (cur.single) {
           cur.select.splice(0, 1, val);
         } else {
-          cur.select.push(val);
+          cur.select.unshift(val);
         }
       }
       this.keywords.splice(typeIndex, 1, cur);
@@ -207,21 +247,40 @@ export default {
 .content {
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 8px 12px;
+  height: calc(100% - 16px);
+  .tip {
+    color: #333;
+    margin-bottom: 5px;
+  }
   .keywordWrap {
     flex: 1;
+    overflow: auto;
     > div {
       height: 100%;
       overflow: auto;
     }
   }
-  .title {
-    font-size: 16px;
+  .header {
     margin: 8px;
-    .tip {
-      font-weight: 100;
-      margin-left: 5px;
-      font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h4 {
+      font-size: 16px;
+    }
+    .count {
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      text-align: center;
+      display: inline-block;
+      background: $theme-color;
+      color: #fff;
+      margin-right: 5px;
+    }
+    .icon {
+      color: #b8b8b8;
     }
   }
   .tagWrap {
@@ -243,6 +302,24 @@ export default {
         color: $theme-color;
         background: rgba($theme-color, 0.1);
       }
+    }
+  }
+  .footer {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    .selWrap {
+      flex: 1;
+      overflow-x: auto;
+      line-height: 38px;
+    }
+    .selected {
+      background: rgba($theme-color, 0.1);
+      color: $theme-color;
+      border-radius: 100px;
+      font-size: 13px;
+      padding: 8px 16px;
+      margin-left: 8px;
     }
   }
 }

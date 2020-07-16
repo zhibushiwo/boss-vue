@@ -21,7 +21,7 @@
     </div>
     <LocationFilter ref="locationFilter" />
     <JobFilterDetail ref="jobFilterDetail" @select="selectFilter" />
-    <KeywordFilter ref="keywordFilter" @select="selectFilter" />
+    <KeywordFilter ref="keywordFilter" @select="selectKeyWord" />
   </div>
 </template>
 
@@ -61,6 +61,9 @@ export default {
     },
     showKeyword() {
       this.$refs.keywordFilter.open();
+    },
+    selectKeyWord(keyw){
+      console.log(keyw)
     }
   },
   components: {
