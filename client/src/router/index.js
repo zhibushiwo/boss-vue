@@ -12,32 +12,50 @@ const routes = [
   {
     path: '/job',
     name: 'Job',
-    component: () => import('../views/Job')
+    component: () => import('../views/Job'),
+    meta: {
+      showFoot: true
+    }
   },
   {
     path: '/company',
     name: 'Company',
-    component: () => import('../views/Company')
+    component: () => import('../views/Company'),
+    meta: {
+      showFoot: true
+    }
   },
   {
     path: '/find',
     name: 'Find',
-    component: () => import('../views/Find')
+    component: () => import('../views/Find'),
+    meta: {
+      showFoot: true
+    }
   },
   {
     path: '/message',
     name: 'Message',
-    component: () => import('../views/Message')
+    component: () => import('../views/Message'),
+    meta: {
+      showFoot: true
+    }
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import('../views/Profile')
+    component: () => import('../views/Profile'),
+    meta: {
+      showFoot: true
+    }
   },
   {
     path: '/*',
     name: '404',
-    component: () => import('../views/404')
+    component: () => import('../views/404'),
+    meta: {
+      showFoot: true
+    }
   }
 ]
 

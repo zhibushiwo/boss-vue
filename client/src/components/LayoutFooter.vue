@@ -3,7 +3,7 @@
     <van-tabbar-item replace :to="item.to" v-for="(item, index) in navs" :key="index">
       <span>{{item.title}}</span>
       <template #icon="props">
-        <base-icon :type="props.active?item.active_icon:item.icon " size="22" />
+        <base-icon :type="props.active?item.active_icon:item.icon " size="22" :badge="item.dot" />
       </template>
     </van-tabbar-item>
   </van-tabbar>
@@ -36,7 +36,8 @@ export default {
           title: "我的",
           to: "/profile",
           icon: "meh",
-          active_icon: "meh-fill"
+          active_icon: "meh-fill",
+          dot: true
         }
       ]
     };

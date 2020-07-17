@@ -18,13 +18,12 @@
         </van-pull-refresh>
       </div>
     </div>
-    <LayoutFooter />
   </div>
 </template>
 <script>
 import { getJobs } from "@/api";
 import LayoutHeader from "@/components/LayoutHeader";
-import LayoutFooter from "@/components/LayoutFooter";
+
 import JobFilter from "./components/JobFilter";
 import JobItem from "./components/JobItem";
 export default {
@@ -82,7 +81,7 @@ export default {
   },
   components: {
     LayoutHeader,
-    LayoutFooter,
+
     JobFilter,
     JobItem
   }
